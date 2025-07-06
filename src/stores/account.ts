@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { AccountType, type IAccount } from '@/types/account.ts'
 
@@ -18,11 +18,49 @@ export const useAccountStore = defineStore('account', () => {
     list.value.push(newAccount)
   }
 
-  const updateAccount = (accountID: number) => {}
+  const updateAccount = (account: IAccount) => {
+    const index = list.value.findIndex((acc) => acc.id === account.id)
+
+    if (index !== -1) {
+      list.value[index] = { ...account }
+    }
+  }
+
+  const saveToStorage = () => {
+    const validAccounts = list.value.filter((account) => {
+      return (
+        account.login &&
+        account.login.trim() !== '' &&
+        account.password &&
+        account.password.trim() !== '' &&
+        account.marks &&
+        account.marks.trim() !== ''
+      )
+    })
+
+    localStorage.setItem('accounts-list', JSON.stringify(validAccounts))
+  }
+
+  const loadFromStorage = () => {
+    const raw = localStorage.getItem('accounts-list')
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw)
+        if (Array.isArray(parsed)) {
+          list.value = parsed
+        }
+      } catch (e) {
+        console.error('Ошибка при чтении из localStorage:', e)
+      }
+    }
+  }
 
   const removeAccount = (accountID: number) => {
     list.value = list.value.filter((account) => account.id !== accountID)
   }
+
+  loadFromStorage()
+  watch(list, saveToStorage, { deep: true })
 
   return { list, addAccount, updateAccount, removeAccount }
 })
