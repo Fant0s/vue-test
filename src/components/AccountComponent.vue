@@ -39,4 +39,5 @@ const handleDelete = () => {
 .account
   display: grid
   grid-template-columns: 1fr 1fr 1fr 1fr 50px
+  gap: 10px
 </style>
