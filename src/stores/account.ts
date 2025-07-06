@@ -9,5 +9,9 @@ export const useAccountStore = defineStore('account', () => {
     list.value.push(account)
   }
 
-  return { list, addAccount }
+  const removeAccount = (accountID: number) => {
+    list.value.filter((account) => account.id !== accountID)
+  }
+
+  return { list, addAccount, removeAccount }
 })
