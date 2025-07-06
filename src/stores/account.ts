@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { AccountType, type IAccount, type TMark } from '@/types/account.ts'
+import { AccountType, type IAccount } from '@/types/account.ts'
 
 const generateId = () => Date.now()
 
@@ -21,7 +21,7 @@ export const useAccountStore = defineStore('account', () => {
   const updateAccount = (accountID: number) => {}
 
   const removeAccount = (accountID: number) => {
-    list.value.filter((account) => account.id !== accountID)
+    list.value = list.value.filter((account) => account.id !== accountID)
   }
 
   return { list, addAccount, updateAccount, removeAccount }
