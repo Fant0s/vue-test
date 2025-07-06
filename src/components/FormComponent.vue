@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { useAccountStore } from '@/stores/account.ts'
 import AccountComponent from '@/components/AccountComponent.vue'
+import { useModalsStore } from '@/stores/modals.ts'
 
 const store = useAccountStore()
+const modalStore = useModalsStore()
 
 const handleAddAccount = () => {
   store.addAccount()
+}
+const handleRemoveAccount = (id: number) => {
+  modalStore.setShowedModal({ type: 'delete', data: { id: id } })
 }
 </script>
 
@@ -20,7 +25,17 @@ const handleAddAccount = () => {
       запятой `;`. Максимум 50 символов.
     </p>
     <div class="accounts-list">
-      <AccountComponent v-for="account in store.list" :key="account.id" />
+      <template v-if="store.list.length">
+        <AccountComponent
+          v-for="account in store.list"
+          :key="account.id"
+          :account="account"
+          @delete="(id: number) => handleRemoveAccount(id)"
+        />
+      </template>
+      <template v-else>
+        <p class="not-found">Ничего не найдено</p>
+      </template>
     </div>
   </div>
 </template>
