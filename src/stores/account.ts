@@ -1,12 +1,21 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { IAccount } from '@/types/account.ts'
+import { AccountType, type IAccount, type TMark } from '@/types/account.ts'
+
+const generateId = () => Date.now()
 
 export const useAccountStore = defineStore('account', () => {
   const list = ref<IAccount[]>([])
 
-  const addAccount = (account: IAccount) => {
-    list.value.push(account)
+  const addAccount = () => {
+    const newAccount: IAccount = {
+      id: generateId(),
+      marks: '',
+      type: AccountType.Local,
+      login: '',
+      password: '',
+    }
+    list.value.push(newAccount)
   }
 
   const updateAccount = (accountID: number) => {}
