@@ -12,8 +12,8 @@ const modalStore = useModalsStore()
   </main>
 
   <transition name="fade">
-    <div class="modal-layer" v-if="modalStore.showedModal">
-      <div class="modal-wrapper" @click.stop="modalStore.closeModal()">
+    <div class="modal-layer" v-if="modalStore.showedModal" @click="modalStore.closeModal()">
+      <div class="modal-wrapper" @click.stop>
         <DeleteModal />
       </div>
     </div>
