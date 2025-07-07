@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 
 interface IProps {
+  name: string
   value: string | null
   type: 'login' | 'password' | 'marks'
   error?: boolean
@@ -36,6 +37,7 @@ const handleLoseFocus = () => {
   >
     <input
       ref="inputRef"
+      :name="name"
       :value="props.value"
       placeholder="Значение"
       :type="props.type === 'password' ? inputType : props.type"
@@ -59,12 +61,16 @@ const handleLoseFocus = () => {
   border: 2px solid gray
   transition: .3s ease-out
   border-radius: 5px
+  width: 100%
+  height: 100%
   input
     width: 100%
+    height: 100%
     padding: 10px
     border: unset
     outline: none
     background-color: transparent
+    font-size: 16px
   &.error
     border-color: red
     color: red

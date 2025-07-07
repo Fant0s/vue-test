@@ -22,7 +22,10 @@ const handleDelete = () => {
   emit('delete', props.account.id)
 }
 
-const handleSave = (field: 'login' | 'password' | 'marks', value: string | TMark[] | null) => {
+const handleSave = (
+  field: 'login' | 'password' | 'marks' | 'type',
+  value: string | TMark[] | null,
+) => {
   let processed = value
 
   if (field === 'marks' && typeof value === 'string') {
@@ -38,7 +41,7 @@ const handleSave = (field: 'login' | 'password' | 'marks', value: string | TMark
   validation(field)
 }
 
-const validation = (field: 'login' | 'marks' | 'password') => {
+const validation = (field: 'login' | 'marks' | 'password' | 'type') => {
   const value = props.account[field]
 
   if (field === 'login' && (!value || value.length > 100)) {
@@ -58,39 +61,73 @@ const validation = (field: 'login' | 'marks' | 'password') => {
 </script>
 
 <template>
-  <div class="account" :class="{ LDAP: props.account.type === AccountType.LDAP }">
-    <InputComponent
-      type="marks"
-      :value="props.account.marks.map((m) => m.text).join('; ')"
-      :error="errors.marks"
-      @update:value="(val) => handleSave('marks', val)"
-    />
-
-    <SelectComponent :error="errors.type" @update:value="(val) => handleSave('type', val)" />
-
-    <InputComponent
-      type="login"
-      :value="props.account.login"
-      :error="errors.login"
-      @update:value="(val) => handleSave('login', val)"
-    />
-
-    <InputComponent
-      type="password"
-      :value="props.account.password"
-      :error="errors.password"
-      @update:value="(val) => handleSave('password', val)"
-    />
-
-    <button class="delete" @click="handleDelete">delete</button>
-  </div>
+  <tr class="account" :class="{ LDAP: props.account.type === AccountType.LDAP }">
+    <td class="cell">
+      <div class="cell-content">
+        <InputComponent
+          name="marks"
+          type="marks"
+          :value="props.account.marks.map((m) => m.text).join('; ')"
+          :error="errors.marks"
+          @update:value="(val) => handleSave('marks', val)"
+        />
+      </div>
+    </td>
+    <td class="cell">
+      <div class="cell-content">
+        <SelectComponent
+          :error="errors.type"
+          :value="props.account.type"
+          @update:value="(val) => handleSave('type', val)"
+        />
+      </div>
+    </td>
+    <td class="cell" :colspan="account.type !== AccountType.Local ? 2 : 1">
+      <div class="cell-content">
+        <InputComponent
+          name="login"
+          type="login"
+          :value="props.account.login"
+          :error="errors.login"
+          @update:value="(val) => handleSave('login', val)"
+        />
+      </div>
+    </td>
+    <td class="cell" v-if="account.type === AccountType.Local">
+      <div class="cell-content">
+        <InputComponent
+          name="password"
+          type="password"
+          :value="props.account.password"
+          :error="errors.password"
+          @update:value="(val) => handleSave('password', val)"
+        />
+      </div>
+    </td>
+    <td class="cell cell-btn">
+      <div class="cell-content">
+        <button class="delete" @click="handleDelete">delete</button>
+      </div>
+    </td>
+  </tr>
 </template>
 
 <style lang="sass" scoped>
 .account
-  display: grid
-  grid-template-columns: 1fr .7fr 1fr 1fr 50px
-  gap: 10px
-  &.LDAP
-    grid-template-columns: 1fr .7fr 2fr 50px
+  .cell
+    .cell-content
+      display: flex
+      width: 100%
+      height: 60px
+      padding: 5px
+    &.cell-btn
+      width: 60px
+      min-width: 60px
+      max-width: 60px
+      .cell-content
+        padding: 5px 0
+        .delete
+          padding: 0
+          width: 100%
+          height: 100%
 </style>
