@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { AccountType, type IAccount, type TMark } from '@/types/account.ts'
 import SelectComponent from '@/components/SelectComponent.vue'
 import { useAccountStore } from '@/stores/account.ts'
+import DeleteIcon from '@/components/icons/deleteIcon.vue'
 
 interface IProps {
   account: IAccount
@@ -65,11 +66,13 @@ const validation = (field: 'login' | 'marks' | 'password' | 'type') => {
     <td class="cell">
       <div class="cell-content">
         <InputComponent
+          :id="props.account.id"
           name="marks"
           type="marks"
           :value="props.account.marks.map((m) => m.text).join('; ')"
           :error="errors.marks"
           @update:value="(val) => handleSave('marks', val)"
+          :options="{ maxLength: 50 }"
         />
       </div>
     </td>
@@ -85,28 +88,32 @@ const validation = (field: 'login' | 'marks' | 'password' | 'type') => {
     <td class="cell" :colspan="account.type !== AccountType.Local ? 2 : 1">
       <div class="cell-content">
         <InputComponent
+          :id="props.account.id"
           name="login"
           type="login"
           :value="props.account.login"
           :error="errors.login"
           @update:value="(val) => handleSave('login', val)"
+          :options="{ maxLength: 100 }"
         />
       </div>
     </td>
     <td class="cell" v-if="account.type === AccountType.Local">
       <div class="cell-content">
         <InputComponent
+          :id="props.account.id"
           name="password"
           type="password"
           :value="props.account.password"
           :error="errors.password"
           @update:value="(val) => handleSave('password', val)"
+          :options="{ maxLength: 100 }"
         />
       </div>
     </td>
     <td class="cell cell-btn">
       <div class="cell-content">
-        <button class="delete" @click="handleDelete">delete</button>
+        <button class="delete" @click="handleDelete"><DeleteIcon /></button>
       </div>
     </td>
   </tr>
@@ -127,7 +134,16 @@ const validation = (field: 'login' | 'marks' | 'password' | 'type') => {
       .cell-content
         padding: 5px 0
         .delete
+          display: flex
+          justify-content: center
+          align-items: center
           padding: 0
           width: 100%
           height: 100%
+          border: unset
+          background-color: unset
+          svg
+            display: flex
+            width: 100%
+            height: 100%
 </style>
