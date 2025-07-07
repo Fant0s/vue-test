@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { TMark } from '@/types/account.ts'
 
 interface IProps {
-  value: string | TMark[] | null
+  value: string | null
   type: 'login' | 'password' | 'marks'
   error?: boolean
 }
@@ -12,6 +11,10 @@ const props = withDefaults(defineProps<IProps>(), {
   value: '',
   error: false,
 })
+
+const emit = defineEmits<{
+  (e: 'update:value', value: string | null): void
+}>()
 
 const inputRef = ref<HTMLInputElement | null>(null)
 const isFocused = ref(false)
@@ -33,10 +36,12 @@ const handleLoseFocus = () => {
   >
     <input
       ref="inputRef"
+      :value="props.value"
       placeholder="Значение"
-      :type="props.type === 'password' ? inputType : type"
+      :type="props.type === 'password' ? inputType : props.type"
       @focus="isFocused = true"
       @blur="handleLoseFocus"
+      @input="emit('update:value', ($event.target as HTMLInputElement).value)"
     />
     <template v-if="props.type === 'password'">
       <button class="visible" @click="toggleVisibility">
