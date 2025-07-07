@@ -1,6 +1,6 @@
 import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
-import { AccountType, type IAccount } from '@/types/account.ts'
+import { AccountType, type IAccount, type IAccountSaved, type TMark } from '@/types/account.ts'
 
 const generateId = () => Date.now()
 
@@ -10,7 +10,7 @@ export const useAccountStore = defineStore('account', () => {
   const addAccount = () => {
     const newAccount: IAccount = {
       id: generateId(),
-      marks: '',
+      marks: [],
       type: AccountType.Local,
       login: '',
       password: '',
@@ -27,18 +27,7 @@ export const useAccountStore = defineStore('account', () => {
   }
 
   const saveToStorage = () => {
-    const validAccounts = list.value.filter((account) => {
-      return (
-        account.login &&
-        account.login.trim() !== '' &&
-        account.password &&
-        account.password.trim() !== '' &&
-        account.marks &&
-        account.marks.trim() !== ''
-      )
-    })
-
-    localStorage.setItem('accounts-list', JSON.stringify(validAccounts))
+    localStorage.setItem('accounts-list', JSON.stringify(list.value))
   }
 
   const loadFromStorage = () => {
@@ -53,6 +42,21 @@ export const useAccountStore = defineStore('account', () => {
         console.error('Ошибка при чтении из localStorage:', e)
       }
     }
+  }
+
+  const remakeMarks = (data: IAccountSaved[]): IAccount[] => {
+    return data.map((account) => {
+      const marksArray: TMark[] = account.marks
+        .split(';')
+        .map((m) => m.trim())
+        .filter(Boolean)
+        .map((text) => ({ text }))
+
+      return {
+        ...account,
+        marks: marksArray,
+      }
+    })
   }
 
   const removeAccount = (accountID: number) => {

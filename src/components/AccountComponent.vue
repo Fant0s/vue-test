@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import InputComponent from '@/components/InputComponent.vue'
 import { ref } from 'vue'
-import { AccountType, type IAccount } from '@/types/account.ts'
+import { AccountType, type IAccount, type TMark } from '@/types/account.ts'
 import SelectComponent from '@/components/SelectComponent.vue'
 import { useAccountStore } from '@/stores/account.ts'
 
@@ -22,8 +22,18 @@ const handleDelete = () => {
   emit('delete', props.account.id)
 }
 
-const handleSave = (field: 'login' | 'marks' | 'password', value: string | null) => {
-  const updated = { ...props.account, [field]: value }
+const handleSave = (field: 'login' | 'password' | 'marks', value: string | TMark[] | null) => {
+  let processed = value
+
+  if (field === 'marks' && typeof value === 'string') {
+    processed = value
+      .split(';')
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map((text) => ({ text })) // ← создаём массив TMark[]
+  }
+
+  const updated = { ...props.account, [field]: processed }
   store.updateAccount(updated)
   validation(field)
 }
@@ -51,7 +61,7 @@ const validation = (field: 'login' | 'marks' | 'password') => {
   <div class="account" :class="{ LDAP: props.account.type === AccountType.LDAP }">
     <InputComponent
       type="marks"
-      :value="props.account.marks"
+      :value="props.account.marks.map((m) => m.text).join('; ')"
       :error="errors.marks"
       @update:value="(val) => handleSave('marks', val)"
     />

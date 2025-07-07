@@ -1,12 +1,18 @@
 export interface IAccount {
   id: number
-  marks: string | TMark[]
-  type: AccountType.Local
+  marks: TMark[]
+  type: AccountType
   login: string
   password: string | null
 }
 
-export type IAccountDraft = Omit<IAccount, 'id'>
+export interface IAccountSaved {
+  id: number
+  marks: string
+  type: AccountType
+  login: string
+  password: string | null
+}
 
 export enum AccountType {
   LDAP = 'LDAP',
