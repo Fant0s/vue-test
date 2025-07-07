@@ -34,7 +34,7 @@ const handleSave = (
       .split(';')
       .map((s) => s.trim())
       .filter(Boolean)
-      .map((text) => ({ text })) // ← создаём массив TMark[]
+      .map((text) => ({ text }))
   }
 
   const updated = { ...props.account, [field]: processed }

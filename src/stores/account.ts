@@ -1,6 +1,6 @@
 import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
-import { AccountType, type IAccount, type IAccountSaved, type TMark } from '@/types/account.ts'
+import { AccountType, type IAccount } from '@/types/account.ts'
 
 const generateId = () => Date.now()
 
@@ -42,21 +42,6 @@ export const useAccountStore = defineStore('account', () => {
         console.error('Ошибка при чтении из localStorage:', e)
       }
     }
-  }
-
-  const remakeMarks = (data: IAccountSaved[]): IAccount[] => {
-    return data.map((account) => {
-      const marksArray: TMark[] = account.marks
-        .split(';')
-        .map((m) => m.trim())
-        .filter(Boolean)
-        .map((text) => ({ text }))
-
-      return {
-        ...account,
-        marks: marksArray,
-      }
-    })
   }
 
   const removeAccount = (accountID: number) => {

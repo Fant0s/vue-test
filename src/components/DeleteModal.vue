@@ -19,8 +19,9 @@ const confirmDelete = () => {
 <template>
   <div class="modal">
     <p class="text">
-      Вы действительно хотите удалить аккаунт с ID:<strong>{{ deleteID }}</strong
-      >?
+      Вы действительно хотите удалить аккаунт с ID:
+      <strong>{{ deleteID }}</strong>
+      ?
     </p>
     <div class="actions">
       <button class="btn delete" @click="confirmDelete">Да</button>

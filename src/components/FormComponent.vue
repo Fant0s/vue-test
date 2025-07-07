@@ -23,10 +23,7 @@ const handleRemoveAccount = (id: number) => {
     </div>
     <div class="hint">
       <hint-icon />
-      <p>
-        В поле <em>"Метка"</em> вводите текстовые метки через точку с запятой `;`. Максимум 50
-        символов.
-      </p>
+      <p>В поле <em>"Метка"</em> вводите текстовые метки через точку с запятой `;`.</p>
     </div>
     <table class="accounts-list">
       <template v-if="store.list.length">
