@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import PasswordVisibilityIcon from '@/components/icons/passwordVisibilityIcon.vue'
 
 interface IProps {
   name: string
@@ -47,7 +48,7 @@ const handleLoseFocus = () => {
     />
     <template v-if="props.type === 'password'">
       <button class="visible" @click="toggleVisibility">
-        {{ inputType === 'password' ? 'show' : 'hide' }}
+        <PasswordVisibilityIcon :is-showed="inputType === 'password'" />
       </button>
     </template>
   </div>
